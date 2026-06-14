@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TKA | SMPN 11 Tangerang</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght=300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- Reset & Base Styles --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); /* Gradasi Background Modern */
+            min-height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            padding: 20px;
+            color: #333;
+        }
+
+        /* --- Container Utama (Gaya Glassmorphism) --- */
+        .main-container { 
+            background: rgba(255, 255, 255, 0.9); 
+            backdrop-filter: blur(10px); /* Efek blur kaca */
+            padding: 40px; 
+            border-radius: 20px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2); 
+            width: 100%; 
+            max-width: 450px; 
+            text-align: center; 
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        /* --- Header & Identitas Sekolah --- */
+        .logo-container {
+            width: 80px; height: 80px; 
+            background-color: white; 
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            overflow: hidden; 
+            border: 2px solid #eee; 
+        }
+        
+        .logo-container img {
+            max-width: 80%; 
+            max-height: 80%;
+            object-fit: contain; 
+        }
+        
+        .school-badge {
+            display: inline-block;
+            background: rgba(118, 75, 162, 0.1);
+            color: #764ba2;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        
+        h2 { font-weight: 700; color: #4a4e69; margin-bottom: 10px; font-size: 24px; }
+        .sub-title { font-weight: 300; color: #777; font-size: 13px; margin-bottom: 30px; line-height: 1.5; }
+
+        /* --- Input Styles --- */
+        .input-group { text-align: left; margin-bottom: 20px; }
+        label { font-size: 12px; font-weight: 600; color: #764ba2; margin-left: 5px; letter-spacing: 0.5px; }
+        input[type="text"] { 
+            width: 100%; 
+            padding: 15px 20px; 
+            margin-top: 8px;
+            border: 2px solid #eee; 
+            border-radius: 50px; 
+            font-size: 16px; 
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            background-color: white;
+        }
+        input[type="text"]:focus { 
+            border-color: #667eea; 
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.2); 
+        }
+
+        /* --- Button Styles --- */
+        button { 
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            color: white; 
+            border: none; 
+            padding: 15px; 
+            font-size: 16px; 
+            font-weight: 600;
+            border-radius: 50px; 
+            cursor: pointer; 
+            box-shadow: 0 5px 15px rgba(118, 75, 162, 0.3);
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: 1px;
+        }
+        button:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 8px 20px rgba(118, 75, 162, 0.4);
+        }
+        button:active { transform: translateY(1px); }
+
+        /* --- Area Hasil --- */
+        .result-container { 
+            margin-top: 30px; 
+            text-align: left; 
+            padding: 20px; 
+            border-radius: 15px; 
+            display: none; 
+            animation: fadeIn 0.5s ease; 
+            border: 1px solid transparent;
+        }
+
+        .student-name { font-weight: 700; font-size: 18px; color: #333; margin-bottom: 15px; text-transform: uppercase; text-align: center;}
+        
+        .score-row { 
+            display: flex; 
+            justify-content: space-between; 
+            background: rgba(255,255,255,0.7); 
+            padding: 10px 15px; 
+            border-radius: 8px; 
+            margin-bottom: 8px; 
+        }
+        .score-label { font-weight: 400; color: #555; }
+        .score-value { font-weight: 700; color: #764ba2; font-size: 16px;}
+
+        /* --- Status Styles --- */
+        .success { background-color: #e6fffa; border-color: #38b2ac; }
+        .error { background-color: #fff5f5; border-color: #f56565; color: #c53030; text-align: center; }
+        
+        .loading-spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            border-left-color: #764ba2;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        /* --- Download Button Styles --- */
+        .download-btn {
+            display: block;
+            text-align: center;
+            background: linear-gradient(135deg, #38b2ac 0%, #2c7a7b 100%);
+            color: white;
+            padding: 14px;
+            margin-top: 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 10px rgba(56, 178, 172, 0.3);
+            transition: all 0.3s ease;
+        }
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(56, 178, 172, 0.4);
+            color: white;
+        }
+        .download-btn:active { transform: translateY(1px); }
+
+        /* --- Animations --- */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* --- Responsif Mobile --- */
+        @media (max-width: 480px) {
+            .main-container { padding: 30px 20px; }
+            h2 { font-size: 20px; }
+            button, input[type="text"] { font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-container">
+    <div class="logo-container">
+        <img src="https://i.ibb.co.com/99y5fNyw/LOGO-11.png" alt="Logo SMPN 11 TANGERANG">
+    </div>
+    
+    <div class="school-badge">SMPN 11 TANGERANG</div>
+    
+    <h2>Hasil Tes TKA</h2>
+    <p class="sub-title">Masukkan Nomor Induk Siswa Nasional (NISN) Anda untuk melihat hasil nilai resmi.</p>
+    
+    <div class="input-group">
+        <label for="inputNisn">NISN SISWA</label>
+        <input type="text" id="inputNisn" placeholder="Contoh: 0012345678" autocomplete="off">
+    </div>
+    
+    <button id="btnCek" onclick="cekNilai()">LIHAT HASIL</button>
+
+    <div id="hasilArea" class="result-container"></div>
+</div>
+
+<script>
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz-ciw75muACgzn4F6ZKgtPUaQBD54jKEN5Cn0VmVYGeCHPkqcZhhcO1Vt37PsveZXVSA/exec";
+
+    async function cekNilai() {
+        const nisnInput = document.getElementById("inputNisn").value.trim();
+        const hasilArea = document.getElementById("hasilArea");
+        const btnCek = document.getElementById("btnCek");
+        
+        if (nisnInput === "") {
+            alert("⚠️ Tolong masukkan NISN Anda terlebih dahulu.");
+            return;
+        }
+
+        btnCek.innerHTML = "Mencari Data...";
+        btnCek.disabled = true;
+        btnCek.style.opacity = "0.7";
+
+        hasilArea.style.display = "block";
+        hasilArea.className = "result-container"; 
+        hasilArea.innerHTML = '<div class="loading-spinner"></div>'; 
+
+        try {
+            const response = await fetch(`${WEB_APP_URL}?nisn=${nisnInput}`);
+            if (!response.ok) throw new Error('Network response error');
+            
+            const data = await response.json();
+
+            if (data.status === "success") {
+                hasilArea.className = "result-container success";
+                
+                // --- PENGATURAN LINK GITHUB ---
+                const GITHUB_BASE_URL = "https://raw.githubusercontent.com/yogismandala/hasiltka-smpn11tangerang/main/Sertifikat/";
+                
+                // 1. Dapatkan link asli PDF-nya
+                const pdfUrl = GITHUB_BASE_URL + nisnInput + ".pdf";
+
+                // 2. Trik Preview: Bungkus link PDF asli dengan Google Docs Viewer
+                // Kita gunakan encodeURIComponent agar link aman dibaca oleh Google
+                const previewUrl = "https://docs.google.com/viewer?url=" + encodeURIComponent(pdfUrl);
+
+                // 3. Ubah link pada tombol menjadi previewUrl
+                const downloadHtml = `<a href="${previewUrl}" target="_blank" class="download-btn">LIHAT & UNDUH SERTIFIKAT</a>`;
+
+                hasilArea.innerHTML = `
+                    <div class="student-name">${data.nama}</div>
+                    <div class="score-row">
+                        <span class="score-label">Nilai Numerasi</span>
+                        <span class="score-value">${data.numerasi}</span>
+                    </div>
+                    <div class="score-row">
+                        <span class="score-label">Nilai Literasi</span>
+                        <span class="score-value">${data.literasi}</span>
+                    </div>
+                    ${downloadHtml}
+                `;
+            } else {
+                hasilArea.className = "result-container error";
+                hasilArea.innerHTML = `<strong>Data Tidak Ditemukan!</strong><br><span style="font-size:12px; font-weight:300;">NISN (${nisnInput}) belum terdaftar atau salah ketik. Silakan hubungi admin sekolah.</span>`;
+            }
+        } catch (error) {
+            hasilArea.className = "result-container error";
+            hasilArea.innerHTML = "<strong>Gangguan Server!</strong><br>Gagal mengambil data. Pastikan koneksi internet stabil.";
+            console.error("Error:", error);
+        } finally {
+            btnCek.innerHTML = "LIHAT HASIL";
+            btnCek.disabled = false;
+            btnCek.style.opacity = "1";
+        }
+    }
+</script>
+
+</body>
+</html>
